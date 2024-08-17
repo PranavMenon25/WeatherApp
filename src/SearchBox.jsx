@@ -4,7 +4,7 @@ import "./SearchBox.css"
 import { useState } from 'react';
 // import { API_KEY } from './temp';
 
-export default function SearchBox(){
+export default function SearchBox({updateInfo}){
     let [city, setCity] = useState('');
     const API_URL = "https://api.openweathermap.org/data/2.5/weather";
     const API_KEY = import.meta.env.VITE_API_KEY;
@@ -13,6 +13,7 @@ export default function SearchBox(){
         let res = await fetch(`${API_URL}?q=${city}&appid=${API_KEY}&units=metric`);
         let resjson = await res.json();
         let result = {
+            city: city,
             temp: resjson.main.temp,
             min: resjson.main.temp_min,
             max: resjson.main.temp_max,
@@ -21,6 +22,7 @@ export default function SearchBox(){
             weather: resjson.weather[0].description
         };
         console.log(result);
+        updateInfo(result);
     }
 
 
@@ -33,11 +35,9 @@ export default function SearchBox(){
         console.log(city);
         getWeatherInfo();
         setCity('');
-        
     }
     return (
-        <div className='search'>
-            <h3>Search For the weather</h3>
+        <div className='searchBox'>
             <form onSubmit={handleSubmit}>
                 <TextField id="city" label="City Name" variant="outlined" required value={city} onChange={handleChange}/>
                 <br></br>   <br></br>
